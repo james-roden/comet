@@ -2,7 +2,7 @@
   "name": "claude-commit",
   "displayName": "Claude Commit",
   "description": "Generate conventional commit messages for staged changes using Claude",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "local",
   "license": "MIT",
   "engines": {

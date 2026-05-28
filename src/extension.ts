@@ -39,6 +39,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {}
 
+function stripCodeFences(text: string): string {
+  const trimmed = text.trim();
+  const fenced = /^```[^\n]*\n([\s\S]*?)\n```\s*$/;
+  const match = trimmed.match(fenced);
+  return match ? match[1].trim() : trimmed;
+}
+
 async function getRepo(): Promise<Repository | undefined> {
   const ext = vscode.extensions.getExtension<GitExtension>('vscode.git');
   if (!ext) {
@@ -138,7 +145,8 @@ async function generate() {
     },
     async (_progress, token) => {
       try {
-        const text = await runClaude(binary, repo.rootUri.fsPath, userPrompt, token);
+        const raw = await runClaude(binary, repo.rootUri.fsPath, userPrompt, token);
+        const text = stripCodeFences(raw);
         if (!text) {
           vscode.window.showErrorMessage('Claude returned empty response.');
           return;
